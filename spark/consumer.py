@@ -15,8 +15,8 @@ schema = StructType([
             StructField("id", StringType())
         ])),
         StructField("network", StructType([
-            StructField("src_ip", StringType()),
-            StructField("dst_ip", StringType()),
+            StructField("src_ip",      StringType()),
+            StructField("dst_ip",      StringType()),
             StructField("ip_protocol", StringType())
         ])),
         StructField("transport", StructType([
@@ -25,6 +25,8 @@ schema = StructType([
         ]))
     ]))
 ])
+
+
 
 
 # Read from Kafka
@@ -40,7 +42,7 @@ parsed_df = raw_df.select(
     from_json(col("value").cast("string"), schema).alias("data")
 )
 
-# 🔥 Flatten it
+# Then flatten directly:
 final_df = parsed_df.select(
     col("data.data.session.id").alias("id"),
     col("data.data.network.src_ip").alias("src_ip"),
